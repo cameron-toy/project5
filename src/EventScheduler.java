@@ -5,7 +5,6 @@ public final class EventScheduler
     private PriorityQueue<Event> eventQueue;
     private Map<Entity, List<Event>> pendingEvents;
     private double timeScale;
-    private static final int QUAKE_ANIMATION_REPEAT_COUNT = 10;
 
     public EventScheduler(double timeScale) {
         this.eventQueue = new PriorityQueue<>(new EventComparator());
@@ -64,60 +63,52 @@ public final class EventScheduler
         }
     }
 
-    public void scheduleActions(
-            Action action
-    )
-    {
-        switch (action.getEntity().getKind()) {
-            case MINER_FULL:
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createActivityAction(action.getEntity(), action.getWorld(), action.getImageStore()),
-                        action.getEntity().getActionPeriod());
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createAnimationAction(action.getEntity(),0),
-                        action.getEntity().getAnimationPeriod());
-                break;
-
-            case MINER_NOT_FULL:
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createActivityAction(action.getEntity(), action.getWorld(), action.getImageStore()),
-                        action.getEntity().getActionPeriod());
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createAnimationAction(action.getEntity(),0),
-                        action.getEntity().getAnimationPeriod());
-                break;
-
-            case ORE:
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createActivityAction(action.getEntity(), action.getWorld(), action.getImageStore()),
-                        action.getEntity().getActionPeriod());
-                break;
-
-            case ORE_BLOB:
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createActivityAction(action.getEntity(), action.getWorld(), action.getImageStore()),
-                        action.getEntity().getActionPeriod());
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createAnimationAction(action.getEntity(), 0),
-                        action.getEntity().getAnimationPeriod());
-                break;
-
-            case QUAKE:
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createActivityAction(action.getEntity(), action.getWorld(), action.getImageStore()),
-                        action.getEntity().getActionPeriod());
-                this.scheduleEvent(action.getEntity(), Functions.createAnimationAction(action.getEntity(), QUAKE_ANIMATION_REPEAT_COUNT),
-                        action.getEntity().getAnimationPeriod());
-                break;
-
-            case VEIN:
-                this.scheduleEvent(action.getEntity(),
-                        Functions.createActivityAction(action.getEntity(), action.getWorld(), action.getImageStore()),
-                        action.getEntity().getActionPeriod());
-                break;
-
-            default:
-        }
-    }
+//    public void scheduleActions(
+//            Action action
+//    )
+//    {
+//        ActivityEntity acE = (action.getEntity() instanceof ActivityEntity) ? (ActivityEntity) action.getEntity() : null;
+//        AnimationEntity anE = (action.getEntity() instanceof AnimationEntity) ? (AnimationEntity) action.getEntity() : null;
+//        switch (action.getEntity().getClass()) {
+//            case MinerFull.class:
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createActivityAction(acE, action.getWorld(), action.getImageStore()), acE.getActionPeriod());
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createAnimationAction(anE,0), anE.getAnimationPeriod());
+//                break;
+//
+//            case MinerNotFull.class:
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createActivityAction(acE, action.getWorld(), action.getImageStore()), acE.getActionPeriod());
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createAnimationAction(anE,0), anE.getAnimationPeriod());
+//                break;
+//
+//            case Ore.class:
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createActivityAction(acE, action.getWorld(), action.getImageStore()), acE.getActionPeriod());
+//                break;
+//
+//            case OreBlob.class:
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createActivityAction(acE, action.getWorld(), action.getImageStore()), acE.getActionPeriod());
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createAnimationAction(anE, 0), anE.getAnimationPeriod());
+//                break;
+//
+//            case Quake.class:
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createActivityAction(acE, action.getWorld(), action.getImageStore()), acE.getActionPeriod());
+//                this.scheduleEvent(action.getEntity(), Factory.createAnimationAction(anE, QUAKE_ANIMATION_REPEAT_COUNT), anE.getAnimationPeriod());
+//                break;
+//
+//            case Vein.class:
+//                this.scheduleEvent(action.getEntity(),
+//                        Factory.createActivityAction(acE, action.getWorld(), action.getImageStore()), acE.getActionPeriod());
+//                break;
+//
+//            default:
+//        }
+//    }
 
 }

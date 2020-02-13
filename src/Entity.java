@@ -1,33 +1,20 @@
 import processing.core.PImage;
 
-public interface EntityInterface {
+public interface Entity {
 
-    public PImage getCurrentImage();
+    PImage getCurrentImage();
 
-    public void nextImage();
+    void nextImage();
 
-    public void moveEntity(
+    void moveEntity(
             WorldModel world,
             Point pos);
 
-    public Point getPosition();
+    Point getPosition();
 
-    public String getId();
+    String getId();
 
-    public int getActionPeriod();
-
-    public void setPosition(Point p);
-
-    public boolean moveToOreBlob(
-            WorldModel world,
-            Entity target,
-            EventScheduler scheduler);
-
-    public boolean moveToNotFull(
-            WorldModel world,
-            Entity target,
-            EventScheduler scheduler);
-
+    void setPosition(Point p);
 
 
 }

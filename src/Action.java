@@ -1,7 +1,7 @@
 
-public interface ActionInterface {
+public interface Action {
 
-    //public Entity getEntity();
+    public Entity getEntity();
 
     public WorldModel getWorld();
 

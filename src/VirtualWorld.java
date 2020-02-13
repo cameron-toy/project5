@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import java.util.Scanner;
 
 import processing.core.*;
@@ -34,6 +35,8 @@ public final class VirtualWorld extends PApplet
     private static final double FASTEST_SCALE = 0.10;
 
     private static double timeScale = 1.0;
+
+    private static final Random rand = new Random();
 
     private ImageStore imageStore;
     private WorldModel world;
@@ -143,8 +146,11 @@ public final class VirtualWorld extends PApplet
             WorldModel world, EventScheduler scheduler, ImageStore imageStore)
     {
         for (Entity entity : world.getEntities()) {
-            Action a = Functions.createActivityAction(entity, world, imageStore);
-            scheduler.scheduleActions(a);
+            if (entity instanceof ActivityEntity) {
+                ActivityEntity ae = (ActivityEntity) entity;
+                ActivityAction a = Factory.createActivityAction(ae, world, imageStore);
+                ae.scheduleActions(a, scheduler);
+            }
         }
     }
 
@@ -168,4 +174,6 @@ public final class VirtualWorld extends PApplet
         parseCommandLine(args);
         PApplet.main(VirtualWorld.class);
     }
+
+    public static Random getRand() { return rand; }
 }
