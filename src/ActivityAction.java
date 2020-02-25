@@ -1,25 +1,13 @@
 
-public class ActivityAction implements Action {
-
-    private ActivityEntity entity;
-    private WorldModel world;
-    private ImageStore imageStore;
+public class ActivityAction extends Action {
 
     public ActivityAction(ActivityEntity entity, WorldModel world, ImageStore imageStore) {
-        this.entity = entity;
-        this.world = world;
-        this.imageStore = imageStore;
+        super(entity, world, imageStore);
     }
 
-    public ActivityEntity getEntity () { return this.entity; }
-
-    public WorldModel getWorld() { return this.world; }
-
-    public ImageStore getImageStore() { return this.imageStore; }
-
-    public void executeAction(EventScheduler scheduler)
-    {
-        this.entity.executeActivity(this.world, this.imageStore, scheduler);
+    public void executeAction(EventScheduler scheduler) {
+        ActivityEntity ent = (ActivityEntity) this.entity;
+        ent.executeActivity(this.world, this.imageStore, scheduler);
     }
 
 }

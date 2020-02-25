@@ -1,11 +1,25 @@
 
-public interface Action {
+public abstract class Action {
 
-    public Entity getEntity();
+    protected Entity entity;
+    protected WorldModel world;
+    protected ImageStore imageStore;
 
-    public WorldModel getWorld();
+    public Action(
+            Entity entity,
+            WorldModel world,
+            ImageStore imageStore) {
+        this.entity = entity;
+        this.world = world;
+        this.imageStore = imageStore;
+    }
 
-    public ImageStore getImageStore();
 
-    public void executeAction(EventScheduler scheduler);
+    public Entity getEntity () { return this.entity; }
+
+    public WorldModel getWorld() { return this.world; }
+
+    public ImageStore getImageStore() { return this.imageStore; }
+
+    public abstract void executeAction(EventScheduler scheduler);
 }

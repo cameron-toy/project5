@@ -2,42 +2,13 @@ import processing.core.PImage;
 
 import java.util.List;
 
-public class Obstacle implements Entity {
-
-    private String id;
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
+public class Obstacle extends Entity {
 
     public Obstacle(
             String id,
             Point position,
-            List<PImage> images
-    ) {
-        this.id = id;
-        this.position = position;
-        this.images = images;
+            List<PImage> images) {
+        super(id, position, images);
     }
 
-    public PImage getCurrentImage() { return this.images.get(this.imageIndex); }
-
-    public void nextImage() { this.imageIndex = (this.imageIndex + 1) % this.images.size(); }
-
-    public void moveEntity(
-            WorldModel world,
-            Point pos) {
-        Point oldPos = this.position;
-        if (pos.withinBounds(world) && !pos.equals(oldPos)) {
-            world.setOccupancyCell(oldPos, null);
-            world.removeEntityAt(pos);
-            world.setOccupancyCell(pos, this);
-            this.position = pos;
-        }
-    }
-
-    public Point getPosition() { return this.position; }
-
-    public String getId() { return this.id; }
-
-    public void setPosition(Point p) { this.position = p; }
 }

@@ -1,20 +1,42 @@
 import processing.core.PImage;
+import java.util.List;
 
-public interface Entity {
+public abstract class Entity {
 
-    PImage getCurrentImage();
+    protected String id;
+    protected Point position;
+    protected List<PImage> images;
 
-    void nextImage();
+    public Entity (
+            String id,
+            Point position,
+            List<PImage> images) {
+        this.id = id;
+        this.position = position;
+        this.images = images;
+    }
 
-    void moveEntity(
+    public PImage getCurrentImage() {
+        return this.images.get(0);
+    }
+
+    public void moveEntity(
             WorldModel world,
-            Point pos);
+            Point pos) {
+        Point oldPos = this.position;
+        if (pos.withinBounds(world) && !pos.equals(oldPos)) {
+            world.setOccupancyCell(oldPos, null);
+            world.removeEntityAt(pos);
+            world.setOccupancyCell(pos, this);
+            this.position = pos;
+        }
+    }
 
-    Point getPosition();
+    public Point getPosition() { return this.position; }
 
-    String getId();
+    public String getId() { return this.id; }
 
-    void setPosition(Point p);
+    public void setPosition(Point p) { this.position = p; }
 
 
 }

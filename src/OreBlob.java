@@ -3,14 +3,8 @@ import processing.core.PImage;
 import java.util.List;
 import java.util.Optional;
 
-public class OreBlob implements ActivityEntity, AnimationEntity {
+public class OreBlob extends AnimationEntity {
 
-    private String id;
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    private int actionPeriod;
-    private int animationPeriod;
     private static final String QUAKE_KEY = "quake";
 
     public OreBlob(
@@ -18,48 +12,9 @@ public class OreBlob implements ActivityEntity, AnimationEntity {
             Point position,
             List<PImage> images,
             int actionPeriod,
-            int animationPeriod
-    ) {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+            int animationPeriod) {
+        super(id, position, images, actionPeriod, animationPeriod);
     }
-
-    public PImage getCurrentImage() {
-        return this.images.get(this.imageIndex);
-    }
-
-    public void nextImage() {
-        this.imageIndex = (this.imageIndex + 1) % this.images.size();
-    }
-
-    public void moveEntity(
-            WorldModel world,
-            Point pos) {
-        Point oldPos = this.position;
-        if (pos.withinBounds(world) && !pos.equals(oldPos)) {
-            world.setOccupancyCell(oldPos, null);
-            world.removeEntityAt(pos);
-            world.setOccupancyCell(pos, this);
-            this.position = pos;
-        }
-    }
-
-    public Point getPosition() {
-        return this.position;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setPosition(Point p) {
-        this.position = p;
-    }
-
-    public int getActionPeriod() { return this.actionPeriod; }
 
     public void executeActivity(
             WorldModel world,
@@ -137,12 +92,4 @@ public class OreBlob implements ActivityEntity, AnimationEntity {
         return newPos;
     }
 
-    public int getAnimationPeriod() { return this.animationPeriod; }
-
-    public void scheduleActions(Action action, EventScheduler scheduler) {
-        scheduler.scheduleEvent(action.getEntity(),
-                Factory.createActivityAction(this, action.getWorld(), action.getImageStore()), this.actionPeriod);
-        scheduler.scheduleEvent(action.getEntity(),
-                Factory.createAnimationAction(this, 0), this.animationPeriod);
-    }
 }

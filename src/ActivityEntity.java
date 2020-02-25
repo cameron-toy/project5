@@ -1,13 +1,29 @@
+import processing.core.PImage;
+import java.util.List;
 
-public interface ActivityEntity extends Entity {
+public abstract class ActivityEntity extends Entity {
 
-    public void executeActivity(
+   protected int actionPeriod;
+
+    public ActivityEntity(
+            String id,
+            Point position,
+            List<PImage> images,
+            int actionPeriod) {
+        super(id, position, images);
+        this.actionPeriod = actionPeriod;
+    }
+
+    public abstract void executeActivity(
             WorldModel world,
             ImageStore imageStore,
             EventScheduler scheduler);
 
-    public int getActionPeriod();
+    public int getActionPeriod() { return this.actionPeriod; }
 
-    void scheduleActions(Action action, EventScheduler scheduler);
+    public void scheduleActions(Action action, EventScheduler scheduler) {
+        scheduler.scheduleEvent(action.getEntity(),
+                Factory.createActivityAction(this, action.getWorld(), action.getImageStore()), this.actionPeriod);
+    }
 
 }
