@@ -54,42 +54,24 @@ public class OreBlob extends AnimationEntity {
             return true;
         }
         else {
-            Point nextPos = this.nextPositionOreBlob(world, target.getPosition());
-
+            PathingStrategy strategy = new AStarPathingStrategy();
+            List<Point> path = strategy.computePath(
+                    this.position,
+                    target.getPosition(),
+                    point -> !(world.isOccupied(point)) && point.withinBounds(world),
+                    Point::adjacent,
+                    PathingStrategy.CARDINAL_NEIGHBORS
+            );
+            if (path.isEmpty())
+                return false;
+            Point nextPos = path.get(0);
             if (!this.position.equals(nextPos)) {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
-                if (occupant.isPresent()) {
-                    scheduler.unscheduleAllEvents(occupant.get());
-                }
-
+                occupant.ifPresent(scheduler::unscheduleAllEvents);
                 this.moveEntity(world, nextPos);
             }
             return false;
         }
-    }
-
-    private Point nextPositionOreBlob(
-            WorldModel world, Point destPos)
-    {
-        int horiz = Integer.signum(destPos.getX() - this.position.getX());
-        Point newPos = new Point(this.position.getX() + horiz, this.position.getY());
-
-        Optional<Entity> occupant = world.getOccupant(newPos);
-
-        if (horiz == 0 || (occupant.isPresent() && !(occupant.get().getClass()
-                == Ore.class)))
-        {
-            int vert = Integer.signum(destPos.getY() - this.position.getY());
-            newPos = new Point(this.position.getX(), this.position.getY() + vert);
-            occupant = world.getOccupant(newPos);
-            if (vert == 0 || (occupant.isPresent() && !(occupant.get().getClass()
-                    == Ore.class)))
-            {
-                newPos = this.position;
-            }
-        }
-
-        return newPos;
     }
 
 }

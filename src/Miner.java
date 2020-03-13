@@ -1,7 +1,7 @@
 import processing.core.PImage;
-
 import java.util.List;
 import java.util.Optional;
+
 
 public abstract class Miner extends AnimationEntity{
 
@@ -18,37 +18,30 @@ public abstract class Miner extends AnimationEntity{
         this.resourceLimit = resourceLimit;
     }
 
-    protected Point nextPositionMiner(
-            WorldModel world, Point destPos)
-    {
-        int horiz = Integer.signum(destPos.getX() - this.position.getX());
-        Point newPos = new Point(this.position.getX() + horiz, this.position.getY());
-
-        if (horiz == 0 || world.isOccupied(newPos)) {
-            int vert = Integer.signum(destPos.getY() - this.position.getY());
-            newPos = new Point(this.position.getX(), this.position.getY() + vert);
-
-            if (vert == 0 || world.isOccupied(newPos)) {
-                newPos = this.position;
-            }
-        }
-
-        return newPos;
-    }
 
     public boolean moveTo(
             WorldModel world,
             Entity target,
             EventScheduler scheduler) {
-        Point nextPos = this.nextPositionMiner(world, target.getPosition());
 
-        if (!this.position.equals(nextPos)) {
-            Optional<Entity> occupant = world.getOccupant(nextPos);
-            if (occupant.isPresent()) {
-                scheduler.unscheduleAllEvents(occupant.get());
+        PathingStrategy strategy = new AStarPathingStrategy();
+
+        if (!this.position.adjacent(target.getPosition())) {
+            List<Point> path = strategy.computePath(
+                    this.position,
+                    target.getPosition(),
+                    point -> !(world.isOccupied(point)) && point.withinBounds(world),
+                    Point::adjacent,
+                    PathingStrategy.CARDINAL_NEIGHBORS
+            );
+            if (path.isEmpty())
+                return false;
+            Point nextPos = path.get(0);
+            if (!this.position.equals(nextPos)) {
+                Optional<Entity> occupant = world.getOccupant(nextPos);
+                occupant.ifPresent(scheduler::unscheduleAllEvents);
+                this.moveEntity(world, nextPos);
             }
-
-            this.moveEntity(world, nextPos);
         }
         return false;
     }
