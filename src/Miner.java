@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public abstract class Miner extends AnimationEntity{
+public abstract class Miner extends Ignitable{
 
     protected int resourceLimit;
 
