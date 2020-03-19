@@ -9,6 +9,7 @@ public final class VirtualWorld extends PApplet
 {
     private static final int TIMER_ACTION_PERIOD = 100;
 
+    private int vein_count = 0;
     private static final int VIEW_WIDTH = 640;
     private static final int VIEW_HEIGHT = 480;
     private static final int TILE_WIDTH = 32;
@@ -55,11 +56,11 @@ public final class VirtualWorld extends PApplet
     public void setup() {
         this.imageStore = new ImageStore(
                 createImageColored(TILE_WIDTH, TILE_HEIGHT,
-                                   DEFAULT_IMAGE_COLOR));
+                        DEFAULT_IMAGE_COLOR));
         this.world = new WorldModel(WORLD_ROWS, WORLD_COLS,
-                                    createDefaultBackground(imageStore));
+                createDefaultBackground(imageStore));
         this.view = new WorldView(VIEW_ROWS, VIEW_COLS, this, world, TILE_WIDTH,
-                                  TILE_HEIGHT);
+                TILE_HEIGHT);
         this.scheduler = new EventScheduler(timeScale);
 
         loadImages(IMAGE_LIST_FILE_NAME, imageStore, this);
@@ -103,9 +104,25 @@ public final class VirtualWorld extends PApplet
         }
     }
 
+    public void mouseClicked() {
+        int cellX = (int) Math.floor(mouseX / TILE_WIDTH) + view.getViewport().getCol();
+        int cellY = (int) Math.floor(mouseY / TILE_HEIGHT) + view.getViewport().getRow();
+        Point pos = new Point(cellX, cellY);
+        String id = String.format("CLICK_VEIN_%d", vein_count);
+        vein_count++;
+        Entity v = Factory.createVein(
+                id,
+                pos,
+                33,
+                imageStore.getImageList("vein")
+        );
+        world.addEntity(v);
+        System.out.println(cellX + " " + cellY);
+    }
+
     private static Background createDefaultBackground(ImageStore imageStore) {
         return new Background(DEFAULT_IMAGE_NAME,
-                              imageStore.getImageList(DEFAULT_IMAGE_NAME));
+                imageStore.getImageList(DEFAULT_IMAGE_NAME));
     }
 
     private static PImage createImageColored(int width, int height, int color) {
