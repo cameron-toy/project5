@@ -65,4 +65,10 @@ public class Alien extends AnimationEntity {
         }
     }
 
+    public void scheduleActions(Action action, EventScheduler scheduler) {
+        super.scheduleActions(action, scheduler);
+        scheduler.scheduleEvent(action.getEntity(),
+                Factory.createAnimationAction(this, 5), this.animationPeriod);
+    }
+
 }

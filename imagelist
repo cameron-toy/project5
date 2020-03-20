@@ -54,6 +54,12 @@ fire images/fire28.bmp 255 255 255 0
 fire images/fire29.bmp 255 255 255 0
 fire images/fire30.bmp 255 255 255 0
 fire images/fire31.bmp 255 255 255 0
+alien images/alien1.bmp 255 255 255 0
+alien images/alien2.bmp 255 255 255 0
+alien images/alien3.bmp 255 255 255 0
+alien images/alien4.bmp 255 255 255 0
+alien images/alien5.bmp 255 255 255 0
+alien images/alien6.bmp 255 255 255 0
 ore images/ore.bmp 201 26 26 0
 obstacle images/obstacle.bmp
 grass images/grass.bmp
