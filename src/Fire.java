@@ -33,15 +33,13 @@ public class Fire extends AnimationEntity {
             if (ent instanceof ActivityEntity) {
                 if (ent instanceof Ignitable) {
                     Ignitable burning = (Ignitable) ent;
-                    burning.setOnFire();
+                    burning.setOnFire(imageStore);
                     world.tryAddEntity(burning);
                     ActivityAction a = Factory.createActivityAction(burning, world, imageStore);
                     burning.scheduleActions(a, scheduler);
                     scheduler.scheduleEvent(burning,
                             Factory.createActivityAction(burning, world, imageStore),
                             burning.getActionPeriod());
-                    scheduler.unscheduleAllEvents(this);
-                    world.removeEntity(this);
                     return;
                 }
                 ActivityEntity ae = (ActivityEntity) ent;

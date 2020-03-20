@@ -1,0 +1,7 @@
+Click on any tile to trigger the event.
+2.) When you click, a meteor (vein) falls from the sky and creates a ring of fire on impact. This ring changes any miners and ore blobs to be on fire, at which point they will run around randomly until their life span is over at which point they will disappear. After the fire is gone, the vein will begin to spawn ore and two aliens will spawn that will hunt down miners and teleport them away.
+3.) The affected entities are the miners and the ore blobs. If these entities are hit by the ring of fire, they will be set on fire and will run around randomly.
+4.) The new entity is an alien. Aliens spawn with the meteor and hunt down miners to teleport them away with them.
+5.) Partners: Cameron Toy and Jack Fales
+    Cameron Toy: Worked on the onClick activity and implementing the fire.
+    Jack Fales: Worked on the random pathing strategy and the aliens.

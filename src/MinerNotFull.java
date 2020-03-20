@@ -24,6 +24,12 @@ public class MinerNotFull extends Miner {
             WorldModel world,
             ImageStore imageStore,
             EventScheduler scheduler) {
+        if (onFire) {
+            if (lifeSpan-- <= 0) {
+                scheduler.unscheduleAllEvents(this);
+                world.removeEntity(this);
+            }
+        }
         Optional<Entity> notFullTarget =
                 world.findNearest(this.getPosition(), Ore.class);
 

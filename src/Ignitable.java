@@ -18,14 +18,15 @@ public abstract class Ignitable extends AnimationEntity {
             int animationPeriod) {
         super(id, position, images, actionPeriod, animationPeriod);
         this.onFire = false;
-        this.lifeSpan = 0;
+        setLifeSpan();
     }
 
-    public void setOnFire() { this.onFire = true; }
-    public void setLifeSpan() {
-        int min = 5;
-        int max = 20;
+    public void setOnFire(ImageStore imStore) { this.onFire = true; }
 
+    public void setLifeSpan() {
+        int min = 40;
+        int max = 160;
+        this.actionPeriod = 200;
         Random rand = new Random();
         this.lifeSpan = rand.nextInt((max - min) + 1) + min;
     }
@@ -41,6 +42,8 @@ public abstract class Ignitable extends AnimationEntity {
 
         potential.removeIf(p -> !(!(world.isOccupied(p)) && p.withinBounds(world)));
         Random rand = new Random();
+        if (potential.size() == 0)
+            return false;
         Point nextPos = potential.get(rand.nextInt(potential.size()));
         if (!this.position.equals(nextPos)) {
             Optional<Entity> occupant = world.getOccupant(nextPos);

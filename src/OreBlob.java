@@ -20,6 +20,12 @@ public class OreBlob extends Ignitable {
             WorldModel world,
             ImageStore imageStore,
             EventScheduler scheduler) {
+        if (onFire) {
+            if (lifeSpan-- <= 0) {
+                scheduler.unscheduleAllEvents(this);
+                world.removeEntity(this);
+            }
+        }
         Optional<Entity> blobTarget =
                 world.findNearest(this.getPosition(), Vein.class);
         long nextPeriod = this.getActionPeriod();
@@ -41,7 +47,7 @@ public class OreBlob extends Ignitable {
         scheduler.scheduleEvent(this,
                 Factory.createActivityAction(this, world, imageStore),
                 nextPeriod);
-    }
+        }
 
     public boolean moveToOreBlob(
             WorldModel world,
@@ -75,6 +81,11 @@ public class OreBlob extends Ignitable {
             }
         }
         return this.moveToOnFire(world, scheduler);
+    }
+
+    public void setOnFire(ImageStore imStore) {
+        super.setOnFire(imStore);
+        this.images = imStore.getImageList("blob-fire");
     }
 
 }

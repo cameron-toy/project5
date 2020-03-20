@@ -28,7 +28,7 @@ public abstract class Miner extends Ignitable{
 
         PathingStrategy strategy = new AStarPathingStrategy();
 
-        if (!(this.onFire)) {
+        if (!onFire) {
             if (!this.position.adjacent(target.getPosition())) {
                 List<Point> path = strategy.computePath(
                         this.position,
@@ -55,5 +55,10 @@ public abstract class Miner extends Ignitable{
             WorldModel world,
             EventScheduler scheduler,
             ImageStore imageStore);
+
+    public void setOnFire(ImageStore imStore) {
+        super.setOnFire(imStore);
+        this.images = imStore.getImageList("miner-fire");
+    }
 
 }

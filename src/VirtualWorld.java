@@ -13,8 +13,8 @@ public final class VirtualWorld extends PApplet
 {
     private static final int TIMER_ACTION_PERIOD = 100;
 
-    private static final int ALIEN_ANIMATION_PERIOD = 100;
-    private static final int ALIEN_ACTION_PERIOD = 1000;
+    private static final int ALIEN_ANIMATION_PERIOD = 200;
+    private static final int ALIEN_ACTION_PERIOD = 2000;
 
     private static int vein_count = 0;
     private static final int VIEW_WIDTH = 640;
@@ -187,6 +187,8 @@ public final class VirtualWorld extends PApplet
         int cellY = (int) Math.floor(mouseY / TILE_HEIGHT) + view.getViewport().getRow();
         Point p = new Point(cellX, cellY);
         makeNewOre(p);
+        makeNewAlien(p.shift(1,0));
+        makeNewAlien(p.shift(-1, 0));
         for (int dx = -4; dx <= 4; dx++) {
             for (int dy = -4; dy <= 4; dy++) {
                 Point d = new Point(dx, dy);
