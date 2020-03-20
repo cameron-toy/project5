@@ -6,6 +6,8 @@ public class Factory {
     private static final String QUAKE_ID = "quake";
     private static final int QUAKE_ACTION_PERIOD = 1100;
     private static final int QUAKE_ANIMATION_PERIOD = 100;
+    private static final int FIRE_ACTION_PERIOD = 3200;
+    private static final int FIRE_ANIMATION_PERIOD = 100;
 
     public static Entity createBlacksmith(
             String id, Point position, List<PImage> images)
@@ -78,4 +80,10 @@ public class Factory {
     {
         return new ActivityAction(entity, world, imageStore);
     }
+
+    public static Fire createFire(
+            String id, Point position, List<PImage> images, WorldModel world) {
+        return new Fire(id, position, images, FIRE_ACTION_PERIOD, FIRE_ANIMATION_PERIOD, world);
+    }
+
 }

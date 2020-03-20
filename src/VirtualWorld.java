@@ -9,7 +9,7 @@ public final class VirtualWorld extends PApplet
 {
     private static final int TIMER_ACTION_PERIOD = 100;
 
-    private int vein_count = 0;
+    private static int vein_count = 0;
     private static final int VIEW_WIDTH = 640;
     private static final int VIEW_HEIGHT = 480;
     private static final int TILE_WIDTH = 32;
@@ -104,20 +104,45 @@ public final class VirtualWorld extends PApplet
         }
     }
 
+    public void makeNewOre(Point p) {
+        String id = String.format("CLICK_VEIN_%d", vein_count++);
+        Vein v = Factory.createVein(
+                id,
+                p,
+                22000,
+                imageStore.getImageList("vein"));
+        world.tryAddEntity(v);
+        ActivityAction a = Factory.createActivityAction(v, world, imageStore);
+        v.scheduleActions(a, scheduler);
+        scheduler.scheduleEvent(v,
+                Factory.createActivityAction(v, world, imageStore),
+                v.getActionPeriod());
+    }
+
+    public void makeNewFire(Point p) {
+        String id = "fire";
+        Fire f =  Factory.createFire(
+                id,
+                p,
+                imageStore.getImageList("fire"),
+                world);
+        world.tryAddEntity(f);
+        ActivityAction a = Factory.createActivityAction(f, world, imageStore);
+        f.scheduleActions(a, scheduler);
+        scheduler.scheduleEvent(f,
+                Factory.createActivityAction(f, world, imageStore),
+                f.getActionPeriod());
+
+    }
+
     public void mouseClicked() {
         int cellX = (int) Math.floor(mouseX / TILE_WIDTH) + view.getViewport().getCol();
         int cellY = (int) Math.floor(mouseY / TILE_HEIGHT) + view.getViewport().getRow();
-        Point pos = new Point(cellX, cellY);
-        String id = String.format("CLICK_VEIN_%d", vein_count);
-        vein_count++;
-        Entity v = Factory.createVein(
-                id,
-                pos,
-                33,
-                imageStore.getImageList("vein")
-        );
-        world.addEntity(v);
-        System.out.println(cellX + " " + cellY);
+        makeNewFire(new Point(cellX, cellY));
+        makeNewFire(new Point(cellX + 1, cellY));
+        makeNewFire(new Point(cellX, cellY + 1));
+        makeNewFire(new Point(cellX + 1, cellY + 1));
+
     }
 
     private static Background createDefaultBackground(ImageStore imageStore) {
