@@ -82,8 +82,8 @@ public class Factory {
     }
 
     public static Fire createFire(
-            String id, Point position, List<PImage> images, WorldModel world) {
-        return new Fire(id, position, images, FIRE_ACTION_PERIOD, FIRE_ANIMATION_PERIOD, world);
+            String id, Point position, List<PImage> images, WorldModel world, EventScheduler scheduler) {
+        return new Fire(id, position, images, FIRE_ACTION_PERIOD, FIRE_ANIMATION_PERIOD, world, scheduler);
     }
 
     public static Alien createAlien(
