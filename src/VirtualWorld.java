@@ -2,6 +2,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 import processing.core.*;
 
@@ -38,6 +42,24 @@ public final class VirtualWorld extends PApplet
     private static double timeScale = 1.0;
 
     private static final Random rand = new Random();
+
+    private static final Point ignoreArray[] = new Point[]{
+            new Point(0, 0),
+            new Point(-4, -4),
+            new Point(-4, -3),
+            new Point(-4, 3),
+            new Point(-4, 4),
+            new Point(4, -4),
+            new Point(4, -3),
+            new Point(4, 4),
+            new Point(4, 3),
+            new Point(3, 4),
+            new Point(3, -4),
+            new Point(-3, 4),
+            new Point(-3, -4)
+    };
+
+    private static final Set ignoreSet = new HashSet<>(Arrays.asList(ignoreArray));
 
     private ImageStore imageStore;
     private WorldModel world;
@@ -111,7 +133,12 @@ public final class VirtualWorld extends PApplet
                 p,
                 22000,
                 imageStore.getImageList("vein"));
-        world.tryAddEntity(v);
+
+        Optional<Entity> previousOccupant = world.getOccupant(p);
+        previousOccupant.ifPresent(scheduler::unscheduleAllEvents);
+        previousOccupant.ifPresent(world::removeEntity);
+
+        world.addEntity(v);
         ActivityAction a = Factory.createActivityAction(v, world, imageStore);
         v.scheduleActions(a, scheduler);
         scheduler.scheduleEvent(v,
@@ -125,23 +152,32 @@ public final class VirtualWorld extends PApplet
                 id,
                 p,
                 imageStore.getImageList("fire"),
-                world);
-        world.tryAddEntity(f);
+                world,
+                scheduler);
+        world.addEntity(f);
         ActivityAction a = Factory.createActivityAction(f, world, imageStore);
         f.scheduleActions(a, scheduler);
         scheduler.scheduleEvent(f,
                 Factory.createActivityAction(f, world, imageStore),
                 f.getActionPeriod());
-
     }
+
 
     public void mouseClicked() {
         int cellX = (int) Math.floor(mouseX / TILE_WIDTH) + view.getViewport().getCol();
         int cellY = (int) Math.floor(mouseY / TILE_HEIGHT) + view.getViewport().getRow();
-        makeNewFire(new Point(cellX, cellY));
-        makeNewFire(new Point(cellX + 1, cellY));
-        makeNewFire(new Point(cellX, cellY + 1));
-        makeNewFire(new Point(cellX + 1, cellY + 1));
+        Point p = new Point(cellX, cellY);
+        makeNewOre(p);
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dy = -4; dy <= 4; dy++) {
+                Point d = new Point(dx, dy);
+                if (!ignoreSet.contains(d)) {
+                    do {
+                        makeNewFire(p.translate(d));
+                    } while (rand.nextBoolean());
+                }
+            }
+        }
 
     }
 

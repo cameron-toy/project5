@@ -70,4 +70,8 @@ public final class Point
     public int getX() { return this.x; }
 
     public int getY() { return this.y; }
+
+    public Point shift(int dx, int dy) { return new Point(x + dx, y + dy); }
+
+    public Point translate(Point p) { return shift(p.x, p.y); }
 }
