@@ -86,4 +86,14 @@ public class Factory {
         return new Fire(id, position, images, FIRE_ACTION_PERIOD, FIRE_ANIMATION_PERIOD, world);
     }
 
+    public static Alien createAlien(
+            String id,
+            Point position,
+            int actionPeriod,
+            int animationPeriod,
+            List<PImage> images)
+    {
+        return new Alien(id, position, images, actionPeriod, animationPeriod);
+    }
+
 }
