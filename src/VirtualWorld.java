@@ -13,6 +13,9 @@ public final class VirtualWorld extends PApplet
 {
     private static final int TIMER_ACTION_PERIOD = 100;
 
+    private static final int ALIEN_ANIMATION_PERIOD = 100;
+    private static final int ALIEN_ACTION_PERIOD = 1000;
+
     private static int vein_count = 0;
     private static final int VIEW_WIDTH = 640;
     private static final int VIEW_HEIGHT = 480;
@@ -160,6 +163,22 @@ public final class VirtualWorld extends PApplet
         scheduler.scheduleEvent(f,
                 Factory.createActivityAction(f, world, imageStore),
                 f.getActionPeriod());
+    }
+
+    public void makeNewAlien(Point p) {
+        String id = "alien";
+        Alien a = Factory.createAlien(
+                id,
+                p,
+                ALIEN_ACTION_PERIOD,
+                ALIEN_ANIMATION_PERIOD,
+                imageStore.getImageList("alien"));
+        world.addEntity(a);
+        ActivityAction l = Factory.createActivityAction(a, world, imageStore);
+        a.scheduleActions(l, scheduler);
+        scheduler.scheduleEvent(a,
+                Factory.createActivityAction(a, world, imageStore),
+                a.getActionPeriod());
     }
 
 

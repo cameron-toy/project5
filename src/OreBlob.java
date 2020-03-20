@@ -48,30 +48,33 @@ public class OreBlob extends Ignitable {
             Entity target,
             EventScheduler scheduler)
     {
-        if (this.position.adjacent(target.getPosition())) {
-            world.removeEntity(target);
-            scheduler.unscheduleAllEvents(target);
-            return true;
-        }
-        else {
-            PathingStrategy strategy = new AStarPathingStrategy();
-            List<Point> path = strategy.computePath(
-                    this.position,
-                    target.getPosition(),
-                    point -> !(world.isOccupied(point)) && point.withinBounds(world),
-                    Point::adjacent,
-                    PathingStrategy.CARDINAL_NEIGHBORS
-            );
-            if (path.isEmpty())
-                return false;
-            Point nextPos = path.get(0);
-            if (!this.position.equals(nextPos)) {
-                Optional<Entity> occupant = world.getOccupant(nextPos);
-                occupant.ifPresent(scheduler::unscheduleAllEvents);
-                this.moveEntity(world, nextPos);
+        if (!(this.onFire)){
+            if (this.position.adjacent(target.getPosition())) {
+                world.removeEntity(target);
+                scheduler.unscheduleAllEvents(target);
+                return true;
             }
-            return false;
+            else {
+                PathingStrategy strategy = new AStarPathingStrategy();
+                List<Point> path = strategy.computePath(
+                        this.position,
+                        target.getPosition(),
+                        point -> !(world.isOccupied(point)) && point.withinBounds(world),
+                        Point::adjacent,
+                        PathingStrategy.CARDINAL_NEIGHBORS
+                );
+                if (path.isEmpty())
+                    return false;
+                Point nextPos = path.get(0);
+                if (!this.position.equals(nextPos)) {
+                    Optional<Entity> occupant = world.getOccupant(nextPos);
+                    occupant.ifPresent(scheduler::unscheduleAllEvents);
+                    this.moveEntity(world, nextPos);
+                }
+                return false;
+            }
         }
+        return this.moveToOnFire(world, scheduler);
     }
 
 }

@@ -1,4 +1,6 @@
 import processing.core.PImage;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -26,5 +28,25 @@ public abstract class Ignitable extends AnimationEntity {
 
         Random rand = new Random();
         this.lifeSpan = rand.nextInt((max - min) + 1) + min;
+    }
+
+    public boolean moveToOnFire(WorldModel world,
+                                EventScheduler scheduler) {
+        List<Point> potential = new ArrayList<>();
+
+        potential.add(this.position.shift(0, 1));
+        potential.add(this.position.shift(1, 0));
+        potential.add(this.position.shift(0, -1));
+        potential.add(this.position.shift(-1, 0));
+
+        potential.removeIf(p -> !(!(world.isOccupied(p)) && p.withinBounds(world)));
+        Random rand = new Random();
+        Point nextPos = potential.get(rand.nextInt(potential.size()));
+        if (!this.position.equals(nextPos)) {
+            Optional<Entity> occupant = world.getOccupant(nextPos);
+            occupant.ifPresent(scheduler::unscheduleAllEvents);
+            this.moveEntity(world, nextPos);
+        }
+        return false;
     }
 }
