@@ -19,6 +19,12 @@ public class MinerFull extends Miner {
             WorldModel world,
             ImageStore imageStore,
             EventScheduler scheduler) {
+        if (onFire) {
+            if (lifeSpan-- <= 0) {
+                scheduler.unscheduleAllEvents(this);
+                world.removeEntity(this);
+            }
+        }
         Optional<Entity> fullTarget =
                 world.findNearest(this.getPosition(), Blacksmith.class);
 
